@@ -7,7 +7,7 @@ const router = express.Router();
 
 /**
  * @description Register user
- * @route POST api/v1/users/register
+ * @route POST api/v1/user/register
  * @access Public
  */
 router.post(
@@ -63,7 +63,7 @@ router.post(
 
 /**
  * @description Authenticate user and send token
- * @route POST api/v1/users/login
+ * @route POST api/v1/user/login
  * @access Public
  */
 router.post(

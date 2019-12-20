@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 /* Define routes*/
-app.use('/api/v1/users', require('./routes/users'));
+app.use('/api/v1/user', require('./routes/user'));
 
 const server = app.listen(PORT, () => {
   console.log(
