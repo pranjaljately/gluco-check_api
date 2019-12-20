@@ -53,7 +53,7 @@ router.post(
         expiresIn: process.env.JWT_EXPIRE,
       });
 
-      res.status(200).send({ success: true, token });
+      res.status(200).json({ success: true, token });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ success: false, msg: error.message });
