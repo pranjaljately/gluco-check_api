@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/User');
 const bycrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 /**
@@ -48,7 +49,11 @@ router.post(
       user.password = await bycrypt.hash(password, 10);
       await user.save();
 
-      res.status(200).send({ success: true });
+      let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE,
+      });
+
+      res.status(200).send({ success: true, token });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ success: false, msg: error.message });
