@@ -3,6 +3,7 @@ const User = require('../models/User');
 const bycrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
 const router = express.Router();
 
 /**
@@ -60,6 +61,21 @@ router.post(
     }
   }
 );
+
+/**
+ * @description Get logged in user
+ * @route GET api/v1/user/auth
+ * @access Private
+ */
+router.get('/auth', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, msg: 'User not found' });
+  }
+});
 
 /**
  * @description Authenticate user and send token
