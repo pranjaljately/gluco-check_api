@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 /* Define routes*/
 app.use('/api/v1/user', require('./routes/user'));
 app.use('/api/v1/auth', require('./routes/auth'));
+app.use('/api/v1/reading', require('./routes/reading'));
 
 const server = app.listen(PORT, () => {
   console.log(
