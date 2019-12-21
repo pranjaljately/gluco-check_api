@@ -30,9 +30,9 @@ router.post(
         .json({ success: false, msg: errors.array()[0].msg });
     }
 
-    const { name, email, password } = req.body;
-
     try {
+      const { name, email, password } = req.body;
+
       let user = await User.findOne({ email });
 
       if (user) {
