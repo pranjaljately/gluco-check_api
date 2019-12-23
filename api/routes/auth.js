@@ -28,7 +28,12 @@ router.get('/', auth, async (req, res) => {
  */
 router.post(
   '/login',
-  [check('email').isEmail(), check('password').exists()],
+  [
+    check('email').isEmail(),
+    check('password')
+      .not()
+      .isEmpty(),
+  ],
   async (req, res) => {
     let errors = validationResult(req);
 
@@ -44,9 +49,7 @@ router.post(
       const user = await User.findOne({ email }).select('+password');
 
       if (!user) {
-        return res
-          .status(401)
-          .json({ success: false, msg: 'Invalidal credentials' });
+        return res.status(404).json({ success: false, msg: 'User not found' });
       }
 
       let isMatch = await bycrypt.compare(password, user.password);
