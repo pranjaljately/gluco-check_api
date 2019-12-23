@@ -26,7 +26,7 @@ router.post(
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
-        .status(422)
+        .status(400)
         .json({ success: false, msg: errors.array()[0].msg });
     }
 
