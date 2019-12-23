@@ -13,8 +13,10 @@ router.post(
   '/',
   [
     auth,
-    check('reading', 'Must be a positive numeric value').isFloat({ gt: 0 }),
-    check('readingTime', 'Invalid date, must be a Unix timestamp')
+    check('reading', 'Reading must be a positive numeric value').isFloat({
+      gt: 0,
+    }),
+    check('readingTime', 'Invalid reading time, must be a Unix timestamp')
       .isNumeric()
       .not()
       .isEmpty(),
@@ -23,7 +25,7 @@ router.post(
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
-        .status(422)
+        .status(400)
         .json({ success: false, msg: errors.array()[0].msg });
     }
 
@@ -83,7 +85,7 @@ router.get(
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
-        .status(422)
+        .status(400)
         .json({ success: false, msg: errors.array()[0].msg });
     }
 
