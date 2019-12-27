@@ -6,7 +6,7 @@ const readingSchema = mongoose.Schema({
     ref: 'User',
     required: [true, 'User cannot be blank'],
   },
-  reading: {
+  value: {
     type: Number,
     required: [true, 'Reading cannot be blank '],
     min: 0,
