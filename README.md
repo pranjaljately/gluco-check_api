@@ -17,16 +17,12 @@ Link to Swagger doc...
 - Node 10+
 
 #### Start API server
+-  Configure environment variables
 
-```bash
-  cd src/
-  npm install
-  npm run dev
-```
-
-- Configure environment variables and go to URL provided usually
-  ```
-  http://localhost:5000/
-  ```
+-  ```bash
+    cd src/
+    npm install
+    npm run dev
+   ```
   
-- That's it! Start coding! :rocket:
+-  That's it! Start coding! :rocket:
