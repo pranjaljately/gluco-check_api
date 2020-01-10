@@ -49,7 +49,9 @@ router.post(
       const user = await User.findOne({ email }).select('+password');
 
       if (!user) {
-        return res.status(404).json({ success: false, msg: 'User not found' });
+        return res
+          .status(404)
+          .json({ success: false, msg: 'Invalid credentials' });
       }
 
       let isMatch = await bycrypt.compare(password, user.password);
