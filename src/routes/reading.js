@@ -116,26 +116,31 @@ const calculations = readings => {
   let highEventsCount = 0;
   let lowEventsCount = 0;
   let inTargetEventsCount = 0;
-  let numberOfReadings = readings.length;
+  let numberOfReadings = 1;
+  let average = 0;
 
-  const average =
-    readings.reduce((accumulator, reading) => {
-      if (checkIfHigh(reading)) {
-        highEventsCount++;
-      } else {
-        if (checkIfLow(reading)) lowEventsCount++;
-      }
+  if (readings.length !== 0) {
+    numberOfReadings = readings.length;
 
-      return accumulator + reading.value;
-    }, 0) / numberOfReadings;
+    average =
+      readings.reduce((accumulator, reading) => {
+        if (checkIfHigh(reading)) {
+          highEventsCount++;
+        } else {
+          if (checkIfLow(reading)) lowEventsCount++;
+        }
 
-  inTargetEventsCount = numberOfReadings - (highEventsCount + lowEventsCount);
+        return accumulator + reading.value;
+      }, 0) / numberOfReadings;
+
+    inTargetEventsCount = numberOfReadings - (highEventsCount + lowEventsCount);
+  }
 
   return {
     average: oneDecimalPlace(average),
     highEventsCount,
     lowEventsCount,
-    inTargetEventsCount: numberOfReadings - (highEventsCount + lowEventsCount),
+    inTargetEventsCount,
     A1C: calculateA1C(average),
     distribution: {
       low: Math.round((lowEventsCount / numberOfReadings) * 100),
