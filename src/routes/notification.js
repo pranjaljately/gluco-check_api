@@ -55,6 +55,48 @@ router.post(
 );
 
 /**
+ * @description Get notification preferences for user
+ * @route GET api/v1/notification/
+ * @access Private
+ */
+router.get('/', auth, async (req, res) => {
+  try {
+    const notification = await Notification.findOne({
+      user: req.userId,
+    });
+
+    res.status(200).json({ success: true, notification });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, msg: 'Server error' });
+  }
+});
+
+/**
+ * @description Delete push token
+ * @route DELETE api/v1/notification/token
+ * @access Private
+ */
+router.delete('/token', auth, async (req, res) => {
+  try {
+    const notification = await Notification.findOne({
+      user: req.userId,
+    });
+
+    if (!notification) {
+      return res.status(404).json({ success: false, msg: 'Token not found' });
+    }
+
+    await Notification.deleteOne(notification);
+
+    res.status(200).json({ success: true, msg: 'Token deleted' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, msg: 'Server error' });
+  }
+});
+
+/**
  * @description Set low notification preference
  * @route POST api/v1/notification/low
  * @access Private
