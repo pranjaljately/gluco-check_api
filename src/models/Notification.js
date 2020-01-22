@@ -13,11 +13,11 @@ const notificationSchema = mongoose.Schema({
   },
   lowNotification: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   highNotification: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 });
 
