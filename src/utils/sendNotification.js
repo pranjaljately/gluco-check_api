@@ -78,6 +78,8 @@ const createMessage = (pushToken, value) => {
     sound: 'default',
     title: `BG ${highOrLow}!`,
     body: `Glucose is ${value}. Please take appropriate action.`,
+    priority: 'high',
+    channelId: 'glucose-alerts',
     _displayInForeground: true,
   };
 };
