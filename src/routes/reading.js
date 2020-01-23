@@ -1,9 +1,11 @@
 const express = require('express');
+const router = express.Router();
 const Reading = require('../models/Reading');
 const oneDecimalPlace = require('../utils/numberFormat');
 const { check, validationResult } = require('express-validator');
-const router = express.Router();
 const auth = require('../middleware/auth');
+const Notification = require('../models/Notification');
+const sendNotification = require('../utils/sendNotification');
 
 /**
  * @description Record new reading
@@ -42,6 +44,20 @@ router.post(
       await readingRecord.save();
 
       res.status(200).json({ success: true, readingRecord });
+
+      res.once('finish', async () => {
+        const notification = await Notification.findOne({ user: req.userId });
+
+        if (notification) {
+          const { pushToken, highNotification, lowNotification } = notification;
+          if (
+            (checkIfHigh(value) && highNotification) ||
+            (checkIfLow(value) && lowNotification)
+          ) {
+            await sendNotification(notification.pushToken, value);
+          }
+        }
+      });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ success: false, msg: 'Server error' });
@@ -124,10 +140,10 @@ const calculations = readings => {
 
     average =
       readings.reduce((accumulator, reading) => {
-        if (checkIfHigh(reading)) {
+        if (checkIfHigh(reading.value)) {
           highEventsCount++;
         } else {
-          if (checkIfLow(reading)) lowEventsCount++;
+          if (checkIfLow(reading.value)) lowEventsCount++;
         }
 
         return accumulator + reading.value;
@@ -150,8 +166,8 @@ const calculations = readings => {
   };
 };
 
-const checkIfHigh = reading => reading.value > 7.0;
-const checkIfLow = reading => reading.value < 4.0;
+const checkIfHigh = value => value > 7.0;
+const checkIfLow = value => value < 4.0;
 
 const calculateA1C = value => {
   let A1C = (value * 18 + 46.7) / 28.7;

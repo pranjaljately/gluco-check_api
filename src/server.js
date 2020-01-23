@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 app.use('/api/v1/user', require('./routes/user'));
 app.use('/api/v1/auth', require('./routes/auth'));
 app.use('/api/v1/reading', require('./routes/reading'));
+app.use('/api/v1/notification', require('./routes/notification'));
 
 const server = app.listen(PORT, () => {
   console.log(
