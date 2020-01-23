@@ -9,7 +9,6 @@ const notificationSchema = mongoose.Schema({
   pushToken: {
     type: String,
     required: [true, 'Push notification token cannot be blank '],
-    min: 0,
   },
   lowNotification: {
     type: Boolean,
