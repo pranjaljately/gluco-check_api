@@ -3,6 +3,17 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const mongoose = require('mongoose');
 
+const buildRes = overrides => {
+  const res = {
+    json: jest.fn(() => res).mockName('json'),
+    status: jest.fn(() => res).mockName('status'),
+    ...overrides,
+  };
+  return res;
+};
+
+const buildNext = () => jest.fn().mockName('next');
+
 describe('insert', () => {
   let connection;
 
@@ -15,57 +26,44 @@ describe('insert', () => {
     });
   });
 
-  afterAll(async () => {
-    await connection.disconnect();
-  });
+  afterAll(async () => await connection.disconnect());
 
-  beforeEach(async () => {
-    // await connection.dropCollection('User');
-    await User.deleteMany({});
-  });
+  beforeEach(async () => await User.deleteMany({}));
 
   test('responds with 401 when no token present in header', () => {
     const message = 'No token, authorisation denied';
     const req = { header: jest.fn(() => null) };
-    const next = jest.fn();
-    const res = { json: jest.fn(() => res), status: jest.fn(() => res) };
+    const next = buildNext();
+    const res = buildRes();
+
     auth(req, res, next);
     expect(next).not.toHaveBeenCalled();
-    expect(req.header).toHaveBeenCalledTimes(1);
     expect(req.header).toHaveBeenCalledWith('x-auth-token');
+    expect(req.header).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.status).toHaveBeenCalledTimes(1);
     expect(res.json).toHaveBeenCalledWith({ success: false, msg: message });
     expect(res.json).toHaveBeenCalledTimes(1);
   });
 
-  test('responds with 404 when user not found using decoded token', async () => {
+  test('responds with 404 when user is not found', async () => {
+    const message = 'User not found';
     jest.spyOn(jwt, 'verify');
 
     jwt.verify.mockImplementation((token, secret) => {
       return { id: 'incorrect_id' };
     });
 
-    const message = 'User not found';
     const req = {
       header: jest.fn(() => true),
-      userId: null,
     };
-    const next = jest.fn();
-    const res = { json: jest.fn(() => res), status: jest.fn(() => res) };
-
-    const user = new User({
-      name: 'John',
-      email: 'test@gmail.com',
-      password: '123456',
-    });
-
-    await user.save();
+    const next = buildNext();
+    const res = buildRes();
 
     await auth(req, res, next);
     expect(next).not.toHaveBeenCalled();
-    expect(req.header).toHaveBeenCalledTimes(1);
     expect(req.header).toHaveBeenCalledWith('x-auth-token');
+    expect(req.header).toHaveBeenCalledTimes(1);
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.status).toHaveBeenCalledTimes(1);
     expect(res.json).toHaveBeenCalledWith({ success: false, msg: message });
@@ -74,13 +72,13 @@ describe('insert', () => {
     jwt.verify.mockRestore();
   });
 
-  test('a valid token is included in the header and the next function is called', async () => {
+  test('calls next when a valid token is included in the header and a user is found using decoded token', async () => {
     const req = {
       header: jest.fn(() => true),
       userId: null,
     };
     const next = jest.fn();
-    const res = { json: jest.fn(() => res), status: jest.fn(() => res) };
+    const res = buildRes();
 
     const user = new User({
       name: 'John',
@@ -99,11 +97,37 @@ describe('insert', () => {
     });
 
     await auth(req, res, next);
-    expect(req.header).toHaveBeenCalledTimes(1);
     expect(req.header).toHaveBeenCalledWith('x-auth-token');
+    expect(req.header).toHaveBeenCalledTimes(1);
     expect(res.status).not.toHaveBeenCalled();
     expect(res.json).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalled();
+
+    jwt.verify.mockRestore();
+  });
+
+  test('responds with 401 and error message when an invalid token is supplied', async () => {
+    const message = 'Invalid token';
+    jest.spyOn(jwt, 'verify');
+
+    jwt.verify.mockImplementation((token, secret) => {
+      throw Error();
+    });
+
+    const req = {
+      header: jest.fn(() => true),
+    };
+    const next = buildNext();
+    const res = buildRes();
+
+    await auth(req, res, next);
+    expect(next).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalledWith('x-auth-token');
+    expect(req.header).toHaveBeenCalledTimes(1);
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.status).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({ success: false, msg: message });
+    expect(res.json).toHaveBeenCalledTimes(1);
 
     jwt.verify.mockRestore();
   });
