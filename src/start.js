@@ -1,42 +1,21 @@
-const express = require('express');
-const morgan = require('morgan');
+const dotenv = require('dotenv');
+const app = require('./server');
+const { connectDb } = require('./config/db');
 
-const startServer = ({ port = process.env.PORT } = {}) => {
-  const app = express();
+dotenv.config({ path: './config/config.env' });
 
-  /* Body parser */
-  app.use(express.json());
+connectDb();
 
-  /* Dev logging middleware*/
-  if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-  }
+const port = process.env.PORT || 5000;
 
-  app.get('/', (req, res) => {
-    res
-      .status(200)
-      .json({ success: true, msg: 'Welcome to the Gluco-check Api' });
-  });
+const server = app.listen(port, () => {
+  console.log(
+    `Server running in ${process.env.NODE_ENV} mode and listening on port ${port}`
+  );
+});
 
-  /* Define routes*/
-  app.use('/api/v1/user', require('./routes/user'));
-  app.use('/api/v1/auth', require('./routes/auth'));
-  app.use('/api/v1/reading', require('./routes/reading'));
-  app.use('/api/v1/notification', require('./routes/notification'));
-
-  const server = app.listen(port, () => {
-    console.log(
-      `Server running in ${process.env.NODE_ENV} mode and listening on port ${port}`
-    );
-  });
-
-  /* Handle unhandled promise rejections */
-  process.on('unhandledRejection', error => {
-    console.error(error.message);
-    server.close(process.exit(1));
-  });
-
-  return server;
-};
-
-module.exports = startServer;
+/* Handle unhandled promise rejections */
+process.on('unhandledRejection', error => {
+  console.error(error.message);
+  server.close(process.exit(1));
+});
