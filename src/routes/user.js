@@ -51,9 +51,7 @@ router.post(
       user.password = await bycrypt.hash(password, 10);
       await user.save();
 
-      let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE,
-      });
+      let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
       res.status(200).json({ success: true, token });
     } catch (error) {

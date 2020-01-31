@@ -1,8 +1,7 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-process.env.JWT_SECRET = 'fhggiruu56n6994gnngifhdf';
-process.env.JWT_EXPIRE = '60d';
+process.env.JWT_SECRET = 'fhgjggspvjsbiruu56n6422994gnngifhdfjhg?5';
 
 module.exports = {
   // All imported modules in your tests should be mocked automatically
@@ -150,9 +149,7 @@ module.exports = {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  // testPathIgnorePatterns: [
-  //   "\\\\node_modules\\\\"
-  // ],
+  testPathIgnorePatterns: ['\\\\node_modules\\\\', '<rootDir>/__tests__/utils'],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],

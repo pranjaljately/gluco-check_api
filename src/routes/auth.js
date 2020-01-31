@@ -64,9 +64,7 @@ router.post(
           .json({ success: false, msg: 'Invalid credentials' });
       }
 
-      let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE,
-      });
+      let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
       res.status(200).json({ success: true, token });
     } catch (error) {
