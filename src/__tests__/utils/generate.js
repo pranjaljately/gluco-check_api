@@ -15,7 +15,7 @@ module.exports = {
 
   buildNext: () => jest.fn().mockName('next'),
 
-  loginForm: overrides => {
+  registerForm: overrides => {
     return {
       name: getName(),
       password: getPassword(),
@@ -23,4 +23,7 @@ module.exports = {
       ...overrides,
     };
   },
+  name: getName(),
+  email: getEmail(),
+  password: getPassword(),
 };

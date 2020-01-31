@@ -1,5 +1,5 @@
 const { connectDb, resetDb, disconnectDb } = require('../config/db');
-const { loginForm } = require('./utils/generate');
+const { registerForm } = require('./utils/generate');
 const supertest = require('supertest');
 const app = require('../server');
 const request = supertest(app);
@@ -11,7 +11,7 @@ afterAll(() => disconnectDb());
 beforeEach(() => resetDb());
 
 test('auth flow', async done => {
-  const { name, password, email } = loginForm();
+  const { name, password, email } = registerForm();
   const registerRes = await request.post('/api/v1/user/register').send({
     name,
     email,
