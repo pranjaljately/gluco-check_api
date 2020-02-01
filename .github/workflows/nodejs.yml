@@ -12,8 +12,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm ci
-      - run: npm test
-        working-directory: ./src
-        env:
-          CI: true
+      
+      - name: Install dependencies
+        working-directory: src
+        run: |
+          npm ci
+
+      - name: Run tests
+        working-directory: src
+        run: |
+          npm test
