@@ -19,7 +19,7 @@ beforeEach(() => {
   ({ name, password, email } = registerForm());
 });
 
-test('responds with 400 and message when no name provided', async () => {
+test('name is required', async () => {
   const registerRes = await request.post('/api/v1/user/register').send({
     email,
     password,
@@ -32,7 +32,7 @@ test('responds with 400 and message when no name provided', async () => {
   });
 });
 
-test('responds with 400 and message when no email provided', async () => {
+test('email is required', async () => {
   const registerRes = await request.post('/api/v1/user/register').send({
     name,
     password,
@@ -61,7 +61,7 @@ test('responds with 400 and message when invalid email provided', async () => {
   });
 });
 
-test('responds with 400 and message when no password provided', async () => {
+test('password is required', async () => {
   const registerRes = await request.post('/api/v1/user/register').send({
     name,
     email,
@@ -74,7 +74,7 @@ test('responds with 400 and message when no password provided', async () => {
   });
 });
 
-test('responds with 400 and message when a password with less than 6 characters provided', async () => {
+test('password cannot be less than 6 characters', async () => {
   password = '12345';
 
   const registerRes = await request.post('/api/v1/user/register').send({
@@ -90,7 +90,7 @@ test('responds with 400 and message when a password with less than 6 characters 
   });
 });
 
-test('responds with 200 and token when user is registered', async () => {
+test('responds with 200 and token when user is successfully registered', async () => {
   const registerRes = await request.post('/api/v1/user/register').send({
     name,
     email,
@@ -101,5 +101,28 @@ test('responds with 200 and token when user is registered', async () => {
   expect(registerRes.body).toEqual({
     success: true,
     token: expect.any(String),
+  });
+});
+
+test('email must be unique', async () => {
+  await request.post('/api/v1/user/register').send({
+    name,
+    email,
+    password,
+  });
+
+  const error = await request
+    .post('/api/v1/user/register')
+    .send({
+      name,
+      email,
+      password,
+    })
+    .catch(e => e);
+
+  expect(error.status).toBe(400);
+  expect(error.body).toEqual({
+    success: false,
+    msg: 'Email already in use',
   });
 });
