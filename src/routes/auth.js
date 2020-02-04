@@ -29,10 +29,10 @@ router.get('/', auth, async (req, res) => {
 router.post(
   '/login',
   [
-    check('email')
+    check('email', 'Please enter a valid email')
       .isEmail()
       .normalizeEmail(),
-    check('password')
+    check('password', 'Password cannot be blank')
       .not()
       .isEmpty(),
   ],
@@ -52,7 +52,7 @@ router.post(
 
       if (!user) {
         return res
-          .status(404)
+          .status(400)
           .json({ success: false, msg: 'Invalid credentials' });
       }
 
