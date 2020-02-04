@@ -10,7 +10,7 @@ afterAll(() => disconnectDb());
 
 beforeEach(() => resetDb());
 
-test('auth flow', async done => {
+test('successful auth flow', async done => {
   const { name, password, email } = registerForm();
   const registerRes = await request.post('/api/v1/user/register').send({
     name,
@@ -43,4 +43,58 @@ test('auth flow', async done => {
   });
 
   done();
+});
+
+test('email required to login', async () => {
+  ({ password } = registerForm());
+
+  const error = await request
+    .post('/api/v1/auth/login')
+    .send({
+      password,
+    })
+    .catch(e => e);
+
+  expect(error.status).toBe(400);
+  expect(error.body).toEqual({
+    success: false,
+    msg: 'Please enter a valid email',
+  });
+});
+
+test('password required to login', async () => {
+  ({ email } = registerForm());
+
+  const error = await request
+    .post('/api/v1/auth/login')
+    .send({
+      email,
+    })
+    .catch(e => e);
+
+  expect(error.status).toBe(400);
+  expect(error.body).toEqual({
+    success: false,
+    msg: 'Password cannot be blank',
+  });
+});
+
+test('user must exist to login', async () => {
+  ({ email, password } = registerForm({
+    email: '__user_does_not_exist__@gmail.com',
+  }));
+
+  const error = await request
+    .post('/api/v1/auth/login')
+    .send({
+      email,
+      password,
+    })
+    .catch(e => e);
+
+  expect(error.status).toBe(400);
+  expect(error.body).toEqual({
+    success: false,
+    msg: 'Invalid credentials',
+  });
 });
