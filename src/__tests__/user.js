@@ -1,4 +1,4 @@
-const { registerForm, bui } = require('./utils/generate');
+const { registerForm } = require('./utils/generate');
 const supertest = require('supertest');
 const app = require('../server');
 const request = supertest(app);
