@@ -13,7 +13,7 @@ router.post(
   '/token',
   [
     auth,
-    check('pushToken')
+    check('pushToken', 'Push token cannot be empty')
       .not()
       .isEmpty(),
   ],
@@ -36,7 +36,7 @@ router.post(
       if (record) {
         return res
           .status(400)
-          .json({ success: false, msg: 'Token already registered.' });
+          .json({ success: false, msg: 'Token already registered' });
       }
 
       const notification = new Notification({
@@ -64,6 +64,10 @@ router.get('/', auth, async (req, res) => {
     const notification = await Notification.findOne({
       user: req.userId,
     });
+
+    if (!notification) {
+      return res.status(404).json({ success: false, msg: 'Token not found' });
+    }
 
     res.status(200).json({ success: true, notification });
   } catch (error) {

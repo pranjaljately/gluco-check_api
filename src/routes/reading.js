@@ -35,29 +35,27 @@ router.post(
     try {
       const { value, readingTime } = req.body;
 
-      const readingRecord = new Reading({
+      const reading = new Reading({
         user: req.userId,
         value: oneDecimalPlace(value),
         readingTime,
       });
 
-      await readingRecord.save();
+      await reading.save();
 
-      res.status(200).json({ success: true, readingRecord });
+      const notification = await Notification.findOne({ user: req.userId });
 
-      res.once('finish', async () => {
-        const notification = await Notification.findOne({ user: req.userId });
-
-        if (notification) {
-          const { pushToken, highNotification, lowNotification } = notification;
-          if (
-            (checkIfHigh(value) && highNotification) ||
-            (checkIfLow(value) && lowNotification)
-          ) {
-            await sendNotification(notification.pushToken, value);
-          }
+      if (notification) {
+        const { pushToken, highNotification, lowNotification } = notification;
+        if (
+          (checkIfHigh(value) && highNotification) ||
+          (checkIfLow(value) && lowNotification)
+        ) {
+          await sendNotification(pushToken, value);
         }
-      });
+      }
+
+      res.status(200).json({ success: true, reading });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ success: false, msg: 'Server error' });
