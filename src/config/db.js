@@ -17,4 +17,6 @@ module.exports = {
   resetDb: () => mongoose.connection.dropDatabase(),
 
   disconnectDb: () => mongoose.connection.close(),
+
+  dropCollection: name => mongoose.connection.db.dropCollection(name),
 };
