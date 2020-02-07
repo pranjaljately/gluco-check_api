@@ -157,3 +157,33 @@ test('successfully saved token and retrived notification document', async () => 
 
   dropCollection('notifications');
 });
+
+test('low notification requires boolean', async () => {
+  const res = await request
+    .post('/api/v1/notification/low')
+    .set('x-auth-token', token)
+    .send({
+      lowNotification: '',
+    });
+
+  expect(res.status).toBe(400);
+  expect(res.body).toEqual({
+    success: false,
+    msg: 'Invalid value',
+  });
+});
+
+test('high notification requires boolean', async () => {
+  const res = await request
+    .post('/api/v1/notification/high')
+    .set('x-auth-token', token)
+    .send({
+      highNotification: '',
+    });
+
+  expect(res.status).toBe(400);
+  expect(res.body).toEqual({
+    success: false,
+    msg: 'Invalid value',
+  });
+});
