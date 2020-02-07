@@ -7,7 +7,7 @@
     "start": "NODE_ENV=production node start",
     "dev": "nodemon start",
     "test": "jest",
-    "test:silent": "jest --silent",
+    "test:silent": "jest -i --silent",
     "test:watch": "jest --watch"
   },
   "keywords": [],
