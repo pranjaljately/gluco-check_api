@@ -1,4 +1,4 @@
-const calculations = require('../utils/calculations');
+const { calculation } = require('../utils/calculations');
 const oneDecimalPlace = require('../utils/numberFormat');
 
 test('calculations', async () => {
@@ -17,7 +17,7 @@ test('calculations', async () => {
     },
   ];
 
-  const result = calculations(readingsArray);
+  const result = calculation(readingsArray);
   const average = 6.0;
   const A1C = (average * 18 + 46.7) / 28.7;
   expect(result.average).toBe(oneDecimalPlace(average));
@@ -41,7 +41,7 @@ test('calculations', async () => {
 test('calculations with empty array of readings', async () => {
   const readingsArray = [];
 
-  const result = calculations(readingsArray);
+  const result = calculation(readingsArray);
   const average = 0;
   const A1C = (average * 18 + 46.7) / 28.7;
   expect(result.average).toBe(oneDecimalPlace(average));

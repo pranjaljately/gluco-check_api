@@ -1,6 +1,14 @@
 const oneDecimalPlace = require('./numberFormat');
 
-const calculations = readings => {
+const checkIfHigh = value => value > 7.0;
+const checkIfLow = value => value < 4.0;
+
+const calculateA1C = value => {
+  let A1C = (value * 18 + 46.7) / 28.7;
+  return oneDecimalPlace(A1C);
+};
+
+const calculation = readings => {
   let highEventsCount = 0;
   let lowEventsCount = 0;
   let inTargetEventsCount = 0;
@@ -38,12 +46,9 @@ const calculations = readings => {
   };
 };
 
-const checkIfHigh = value => value > 7.0;
-const checkIfLow = value => value < 4.0;
-
-const calculateA1C = value => {
-  let A1C = (value * 18 + 46.7) / 28.7;
-  return oneDecimalPlace(A1C);
+module.exports = {
+  calculation,
+  checkIfHigh,
+  checkIfLow,
+  calculateA1C,
 };
-
-module.exports = calculations;

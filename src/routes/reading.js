@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Reading = require('../models/Reading');
 const oneDecimalPlace = require('../utils/numberFormat');
-const calculations = require('../utils/calculations');
+const {
+  calculation,
+  checkIfHigh,
+  checkIfLow,
+} = require('../utils/calculations');
 const { check, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
 const Notification = require('../models/Notification');
@@ -117,7 +121,7 @@ router.get(
           readingTime: 'desc',
         });
 
-      let data = calculations(readings);
+      let data = calculation(readings);
 
       res.status(200).json({ success: true, readings, data });
     } catch (error) {
