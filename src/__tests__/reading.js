@@ -186,9 +186,9 @@ test('from value must be a timestamp', async () => {
       });
   }
 
-  readingsArray.reverse();
   const startOfDay = new Date().setHours(0, 0, 0, 0).valueOf();
   const to = Date.now();
+  readingsArray.reverse();
 
   const newValue = 7.0;
   await request
