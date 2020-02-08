@@ -173,7 +173,7 @@ test('from value must be a timestamp', async () => {
   });
 });
 
-test('from value must be a timestamp', async () => {
+test('reading endpoint from - to', async () => {
   const readingsArray = [4.5, 5.0, 5.5, 6.0, 6.5];
 
   for (const value of readingsArray) {
@@ -186,8 +186,8 @@ test('from value must be a timestamp', async () => {
       });
   }
 
-  const startOfDay = new Date().setHours(0, 0, 0, 0).valueOf();
   const to = Date.now();
+  const startOfDay = new Date().setHours(0, 0, 0, 0).valueOf();
   readingsArray.reverse();
 
   const newValue = 7.0;
