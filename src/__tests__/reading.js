@@ -191,12 +191,15 @@ test('reading endpoint from - to', async () => {
   readingsArray.reverse();
 
   const newValue = 7.0;
+  const oneHourLater = new Date();
+  oneHourLater.setHours(oneHourLater.getHours() + 1);
+
   await request
     .post('/api/v1/reading')
     .set('x-auth-token', token)
     .send({
       value: newValue,
-      readingTime: Date.now(),
+      readingTime: oneHourLater.valueOf(),
     });
 
   const res = await request
