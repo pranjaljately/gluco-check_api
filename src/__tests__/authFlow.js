@@ -98,3 +98,30 @@ test('user must exist to login', async () => {
     msg: 'Invalid credentials',
   });
 });
+
+test('password must match to login', async () => {
+  const { name, password, email } = registerForm();
+
+  await request.post('/api/v1/user/register').send({
+    name,
+    email,
+    password,
+  });
+
+  const changedPassword = `${password}?`;
+
+  console.log('TCL: changedPassword', changedPassword);
+  const error = await request
+    .post('/api/v1/auth/login')
+    .send({
+      email,
+      password: changedPassword,
+    })
+    .catch(e => e);
+
+  expect(error.status).toBe(401);
+  expect(error.body).toEqual({
+    success: false,
+    msg: 'Invalid credentials',
+  });
+});
