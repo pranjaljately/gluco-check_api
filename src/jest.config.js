@@ -42,7 +42,14 @@ module.exports = {
   // ],
 
   // An object that configures minimum threshold enforcement for coverage results
-  // coverageThreshold: undefined,
+  coverageThreshold: {
+    global: {
+      statements: 80,
+      branches: 70,
+      lines: 80,
+      functions: 85,
+    },
+  },
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,
@@ -185,4 +192,8 @@ module.exports = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+  watchPlugins: [
+    'jest-watch-typeahead/filename',
+    'jest-watch-typeahead/testname',
+  ],
 };
