@@ -29,6 +29,7 @@
     "@types/jest": "^25.1.0",
     "faker": "^4.1.0",
     "jest": "^25.1.0",
+    "jest-watch-typeahead": "^0.4.2",
     "nodemon": "^2.0.2",
     "supertest": "^4.0.2"
   }
