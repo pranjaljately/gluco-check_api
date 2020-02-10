@@ -26,10 +26,8 @@ test('calculations', async () => {
   expect(result.inTargetEventsCount).toBe(2);
   expect(result.A1C).toBe(oneDecimalPlace(A1C));
 
-  let numberOfReadings = readingsArray.length;
-  if (readingsArray.length === 0) {
-    numberOfReadings = 1;
-  }
+  const numberOfReadings =
+    readingsArray.length === 0 ? 1 : readingsArray.length;
 
   expect(result.distribution).toEqual({
     low: Math.round((1 / numberOfReadings) * 100),
@@ -50,10 +48,8 @@ test('calculations with empty array of readings', async () => {
   expect(result.inTargetEventsCount).toBe(0);
   expect(result.A1C).toBe(oneDecimalPlace(A1C));
 
-  let numberOfReadings = readingsArray.length;
-  if (readingsArray.length === 0) {
-    numberOfReadings = 1;
-  }
+  const numberOfReadings =
+    readingsArray.length === 0 ? 1 : readingsArray.length;
 
   expect(result.distribution).toEqual({
     low: Math.round((0 / numberOfReadings) * 100),
