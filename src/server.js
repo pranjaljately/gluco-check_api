@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const Sentry = require('@sentry/node');
+const rateLimit = require('express-rate-limit');
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -17,6 +18,14 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+app.use(limiter);
 
 app.get('/', (req, res) => {
   res
