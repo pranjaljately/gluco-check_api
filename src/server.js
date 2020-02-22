@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const app = express();
@@ -21,6 +22,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(helmet());
+
+app.use(xss());
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
