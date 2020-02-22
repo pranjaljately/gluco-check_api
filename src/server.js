@@ -1,5 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const app = express();
 const Sentry = require('@sentry/node');
 
@@ -17,6 +20,18 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+app.use(helmet());
+
+app.use(xss());
+
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+app.use(limiter);
 
 app.get('/', (req, res) => {
   res
