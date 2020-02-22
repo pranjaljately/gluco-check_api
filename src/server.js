@@ -1,8 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const app = express();
 const Sentry = require('@sentry/node');
-const rateLimit = require('express-rate-limit');
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -18,6 +19,8 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+app.use(helmet());
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
