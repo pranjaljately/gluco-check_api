@@ -1,14 +1,14 @@
 # Gluco-check api
 
-contains the server side code consumed by the Gluco-check_client (link frontend repo)
+Contains the server side code consumed by the [Gluco-check_client](https://github.com/pranjaljately/gluco-check_client)
 
 # API
 
-This is a Node/Express REST API for...
+This is a Node/Express REST API for the [Gluco-check_client](https://github.com/pranjaljately/gluco-check_client) repo 
 
 # API Usage & Endpoints
 
-Link to Swagger doc...
+[Gluco-Check API design](https://app.swaggerhub.com/apis-docs/pranjaljately/GlucoCheck_API/1.0.0#/)
 
 # APP
 
